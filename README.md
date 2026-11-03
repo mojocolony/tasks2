@@ -1,6 +1,13 @@
-# Tasks — Now & Later (v0.1.8 preview)
+# Tasks — Now, Later & Someday (v0.1.9 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.9 Someday list
+
+- Added **Someday** as the third permanent, foldable list on the Tasks page, immediately below Later.
+- A saved pre-v0.1.9 local workspace automatically gains Someday without modifying any existing tasks, custom lists, order, or notes.
+- Someday supports new tasks, completion, moving/dragging, collapse, Sparkles filter, and page-wide completed-task clearing and restoration.
+- Someday cannot be renamed or deleted. User-created lists remain on the Lists page.
 
 ## v0.1.8 mobile settings drawer
 
@@ -44,7 +51,7 @@ New tasks are unstarred regardless of filter state. The ⚡ symbol appears on a 
 
 ## Implemented in this preview
 
-- Canonical Now and Later lists on the first page; swipe or tap to access a second page of user-created lists.
+- Canonical Now, Later and Someday lists on the first page; swipe or tap to access a second page of user-created lists.
 - Collapse or expand any list; collapse all from the hamburger menu.
 - Add and edit tasks; custom lists may be created, renamed, and deleted. Deleting a list moves its tasks to Later.
 - Tap checkbox to complete/uncomplete; completed tasks remain crossed out and dimmed.
