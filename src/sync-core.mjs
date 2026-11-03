@@ -7,7 +7,12 @@ export const SYNC_APP_ID = 'tasks-now-later';
 export const CANONICAL_IDS = ['now', 'later', 'someday'];
 
 const clone = value => JSON.parse(JSON.stringify(value));
-const same = (a,b) => JSON.stringify(a) === JSON.stringify(b);
+function canonical(value) {
+  if(Array.isArray(value))return '['+value.map(canonical).join(',')+']';
+  if(value && typeof value==='object')return '{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+canonical(value[k])).join(',')+'}';
+  return JSON.stringify(value);
+}
+const same = (a,b) => canonical(a) === canonical(b);
 const newer = (a,b) => {
   const x = Date.parse(a?.updatedAt ?? a?.createdAt ?? 0) || 0;
   const y = Date.parse(b?.updatedAt ?? b?.createdAt ?? 0) || 0;
@@ -57,7 +62,7 @@ export function mergeWorkspaces(localInput,remoteInput,baseInput=null) {
         if(changedL&&changedR){
           const loser=same(winner,left)?right:left;
           if(!loser.deletedAt&&!loser.clearedAt){
-            const suffix=hash(JSON.stringify(loser));
+            const suffix=hash(canonical(loser));
             const conflictId='conflict-'+id+'-'+suffix;
             if(!combined.some(x=>x.id===conflictId) && !l.has(conflictId) && !r.has(conflictId)) {
               combined.push({...clone(loser),id:conflictId,title:loser.title+' (conflict copy)'});
