@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import {
-  emptyState,normalizeState,activeTasks,addTask,toggleCompleted,clearCompleted,
+  SOMEDAY,emptyState,normalizeState,activeTasks,addTask,toggleCompleted,clearCompleted,
   restoreCleared,moveTask,addList,deleteListToLater,removeTask,restoreTask
 } from '../core.mjs';
 const s=emptyState();
-assert.equal(s.lists.length,2);
+assert.equal(s.lists.length,3);
+assert.deepEqual(s.lists.filter(l=>l.permanent).map(l=>l.name),['Now','Later','Someday']);
+assert.equal(s.lists.find(l=>l.id===SOMEDAY)?.collapsed,false);
 const first=addTask(s,{title:'First',listId:'now'});
 assert.equal(first.starred,false,'new tasks are unstarred by default');
 const second=addTask(s,{title:'Second',listId:'now',notes:'https://example.com/',starred:true});
@@ -30,5 +32,20 @@ restoreTask(s,second.id);
 assert.equal(activeTasks(s,'later').length,1);
 const clone=normalizeState(JSON.parse(JSON.stringify(s)));
 assert.equal(clone.tasks.length,2);
+assert.equal(clone.lists.filter(l=>l.permanent).length,3);
+const oldData=JSON.parse(JSON.stringify(s));
+oldData.lists=oldData.lists.filter(l=>l.id!==SOMEDAY);
+const migrated=normalizeState(oldData);
+assert.ok(migrated.lists.some(l=>l.id===SOMEDAY&&l.permanent),'Existing snapshots gain permanent Someday list');
+assert.equal(migrated.tasks.length,2,'Existing tasks are preserved');
+const third=addTask(migrated,{title:'Explore a new hobby',listId:SOMEDAY});
+assert.equal(third.listId,SOMEDAY);
+assert.equal(moveTask(migrated,third.id,'now',0),true,'Someday tasks move to Now');
+assert.equal(moveTask(migrated,third.id,SOMEDAY,0),true,'Now tasks move to Someday');
+assert.equal(toggleCompleted(migrated,third.id),true);
+assert.ok(clearCompleted(migrated,'main').includes(third.id),'Main page clears Someday completed tasks');
+assert.equal(restoreCleared(migrated,[third.id]),1,'Someday cleared tasks can be restored');
+assert.equal(deleteListToLater(migrated,SOMEDAY),0,'Permanent Someday cannot be deleted');
+assert.ok(migrated.lists.some(l=>l.id===SOMEDAY));
 assert.equal(normalizeState({app:'old-tasks',tasks:[],lists:[]}),null);
 console.log('Core state tests passed');
