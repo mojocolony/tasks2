@@ -1,6 +1,6 @@
 /* Isolated service-worker scope and cache: never touches the existing Tasks app. */
-const CACHE = 'tasks-now-later-preview-v011';
-const APP_FILES = ['./', './index.html', './styles.css?v=010', './app.js?v=010', './core.mjs?v=010', './manifest.webmanifest?v=010', './icons/icon.svg?v=010', './icons/icon-192.png?v=010', './icons/icon-512.png?v=010'];
+const CACHE = 'tasks-now-later-preview-v012';
+const APP_FILES = ['./', './index.html', './styles.css?v=011', './app.js?v=011', './core.mjs?v=011', './manifest.webmanifest?v=011', './icons/icon.svg?v=011', './icons/icon-192.png?v=011', './icons/icon-512.png?v=011'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(c => c.addAll(APP_FILES)).then(() => self.skipWaiting()));
 });
