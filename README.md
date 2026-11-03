@@ -1,6 +1,13 @@
-# Tasks — Now & Later (v0.1.5 preview)
+# Tasks — Now & Later (v0.1.6 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.6 expanded-task layout fix
+
+- Delete swipe surface is now confined to the task title row; it cannot bleed into an expanded note area or appear from an ordinary tap.
+- The Delete button is hidden and non-interactive unless a swipe has opened it.
+- Compact notes editor and simpler Mark important control, without the redundant instruction text.
+- Local task data is unchanged.
 
 ## v0.1.5 offline update fix
 
