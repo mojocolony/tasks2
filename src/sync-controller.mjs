@@ -27,6 +27,7 @@ export function createSyncController({getLocal,adopt,loadBaseline,storeBaseline,
     }
   }
   async function initialize(){
+    if(!navigator.onLine){report({kind:'offline',error:'Cloud will reconnect when you are online.'});return;}
     try{
       const user=await cloudUser();
       if(!user){report({kind:'local'});return;}
@@ -87,10 +88,10 @@ export function createSyncController({getLocal,adopt,loadBaseline,storeBaseline,
     report({kind:'pending'});
     schedule();
   }
-  function onOnline(){if(status.enabled)schedule(250);}
-  function onVisible(){if(status.enabled&&document.visibilityState==='visible')schedule(300);}
+  function onOnline(){if(!status.user){void initialize();return;}if(status.enabled)schedule(250);}
+  function onVisible(){if(document.visibilityState!=='visible')return;if(!status.user&&navigator.onLine&&status.kind==='error'){void initialize();return;}if(status.enabled)schedule(300);}
   window.addEventListener('online',onOnline);
   document.addEventListener('visibilitychange',onVisible);
-  pollTimer=setInterval(()=>{if(status.enabled&&document.visibilityState==='visible')schedule(100);},60000);
+  pollTimer=setInterval(()=>{if(document.visibilityState!=='visible')return;if(!status.user&&navigator.onLine&&status.kind==='error'){void initialize();return;}if(status.enabled)schedule(100);},45000);
   return {status,login,initialize,enable,run,logout,changed};
 }
