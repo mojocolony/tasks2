@@ -1,6 +1,6 @@
 export const NOW = 'now';
 export const LATER = 'later';
-export const VERSION = '0.1.1-preview';
+export const VERSION = '0.1.2-preview';
 export const APP_ID = 'tasks-now-later';
 const stamp = () => new Date().toISOString();
 export const makeId = () => crypto.randomUUID();
