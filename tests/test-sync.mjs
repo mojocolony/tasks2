@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {validateWorkspace,mergeWorkspaces,cloudEqual} from '../src/sync-core.mjs';
+const base={app:'tasks-now-later',version:1,updatedAt:'2026-11-03T10:00:00Z',
+lists:[{id:'now',name:'Now',order:0,permanent:true},{id:'later',name:'Later',order:1,permanent:true},{id:'someday',name:'Someday',order:2,permanent:true}],
+tasks:[{id:'one',listId:'now',title:'Pay bill',notes:'https://example.com/',completed:false,updatedAt:'2026-11-03T10:00:00Z'}],
+prefs:{page:'main',font:'large',theme:'dark',starredOnly:false}};
+const clone=x=>structuredClone(x);
+validateWorkspace(base);
+assert.ok(cloudEqual(base,clone(base)));
+assert.equal(mergeWorkspaces(base,null).workspace.tasks.length,1,'Initial cloud should not delete local data');
+const remote=clone(base);
+remote.tasks.push({id:'two',listId:'later',title:'Other device',notes:'',completed:false,updatedAt:'2026-11-03T10:15:00Z'});
+assert.deepEqual(mergeWorkspaces(base,remote).workspace.tasks.map(t=>t.id),['one','two'],'New items unite');
+const left=clone(base),right=clone(base);
+left.tasks[0].title='Pay phone bill';
+left.tasks[0].updatedAt='2026-11-03T11:00:00Z';
+right.tasks[0].notes='https://another.example/';
+right.tasks[0].updatedAt='2026-11-03T12:00:00Z';
+const conflict=mergeWorkspaces(left,right,base);
+assert.equal(conflict.conflicts.length,1,'Two changes to one task are detected');
+assert.equal(conflict.workspace.tasks.length,2,'Losing edit retained as conflict copy');
+assert.ok(conflict.workspace.tasks.some(t=>t.title.includes('conflict copy')));
+const sameRemote=mergeWorkspaces(base,right,base);
+assert.equal(sameRemote.conflicts.length,0,'No false conflicts for unchanged local task');
+const deleted=clone(base);
+deleted.tasks[0].deletedAt='2026-11-03T12:00:00Z';
+deleted.tasks[0].updatedAt='2026-11-03T12:00:00Z';
+assert.ok(mergeWorkspaces(deleted,base,base).workspace.tasks[0].deletedAt,'Soft deletion propagates');
+const cleared=clone(base);
+cleared.tasks[0].clearedAt='2026-11-03T12:00:00Z';
+cleared.tasks[0].updatedAt='2026-11-03T12:00:00Z';
+assert.ok(mergeWorkspaces(cleared,base,base).workspace.tasks[0].clearedAt,'Clear-completed propagates');
+const custom=clone(base);
+custom.lists.push({id:'custom-1',name:'Movies',order:3,permanent:false});
+custom.tasks.push({id:'movie-1',listId:'custom-1',title:'Movie',notes:'',completed:false});
+const other=clone(custom);
+other.lists=other.lists.filter(l=>l.id!=='custom-1');
+other.tasks=other.tasks.map(t=>t.listId==='custom-1'?{...t,listId:'later'}:t);
+const merged=mergeWorkspaces(other,custom,custom).workspace;
+assert.ok(!merged.lists.some(l=>l.id==='custom-1'),'Deleted custom list remains deleted');
+assert.ok(merged.tasks.every(t=>merged.lists.some(l=>l.id===t.listId)),'No orphaned tasks');
+assert.equal(merged.prefs.theme,'dark','Device preference retained');
+assert.throws(()=>validateWorkspace({tasks:[],lists:[]}),/Invalid Tasks 2/);
+console.log('Tasks 2 merge tests passed');
