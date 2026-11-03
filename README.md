@@ -1,6 +1,13 @@
-# Tasks — Now & Later (v0.1.7 preview)
+# Tasks — Now & Later (v0.1.8 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.8 mobile settings drawer
+
+- On phones, Settings uses a right-side drawer sized with dynamic viewport height (`100dvh`) so Safari's toolbar no longer obscures its bottom.
+- The drawer scrolls independently with native vertical touch scrolling, extra bottom safe-area padding, and a sticky Settings/Close header.
+- Desktop remains a smaller popover, now with a dynamic viewport height limit.
+- This change affects layout and versioning only; it does not modify saved tasks, backup keys, or the separate original Tasks app.
 
 ## v0.1.7 delete colour
 
