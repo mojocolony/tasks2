@@ -2,7 +2,7 @@ import {
   NOW, LATER, VERSION, APP_ID, makeId, emptyState, normalizeState, activeTasks,
   addTask, toggleCompleted, clearCompleted, restoreCleared, removeTask, restoreTask,
   moveTask, addList, deleteListToLater
-} from './core.mjs?v=015';
+} from './core.mjs?v=016';
 
 const DB_NAME = 'tasks-now-later-v1';
 const DB_STORE = 'documents';
@@ -124,15 +124,17 @@ function sectionHtml(list){
 function taskHtml(t){
   const expanded=ui.expanded.has(t.id);
   return `<article class="task-shell ${t.completed?'completed':''} ${ui.swipeOpen===t.id?'swipe-open':''}" data-task-id="${esc(t.id)}" data-list-id="${esc(t.listId)}">
-    <button class="swipe-delete" type="button" data-action="delete-task" data-task-id="${esc(t.id)}" aria-label="Delete ${esc(t.title)}">${icon('trash')} Delete</button>
-    <div class="task-body">
+    <div class="task-row">
+      <button class="swipe-delete" type="button" data-action="delete-task" data-task-id="${esc(t.id)}" aria-label="Delete ${esc(t.title)}">${icon('trash')} Delete</button>
+      <div class="task-body">
       <button class="task-check ${t.completed?'checked':''}" role="checkbox" aria-checked="${t.completed}" type="button" data-action="toggle-complete" data-task-id="${esc(t.id)}" aria-label="${t.completed?'Uncomplete':'Complete'} ${esc(t.title)}">${icon(t.completed?'checked':'square')}</button>
       <button class="task-main" type="button" data-action="toggle-expand" data-task-id="${esc(t.id)}" aria-expanded="${expanded}"><span class="task-title">${esc(t.title)}</span>${t.notes.trim()&&!expanded?`<span class="note-presence">${icon('note')}</span>`:''}</button>
       ${t.starred?`<button class="task-star active" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-label="Remove Sparkles from ${esc(t.title)}">${icon('sparkles')}</button>`:''}
       <button class="task-menu" type="button" data-action="edit-task" data-task-id="${esc(t.id)}" aria-label="Task actions for ${esc(t.title)}">${icon('dots')}</button>
       <button class="drag-grip" type="button" data-drag-task="${esc(t.id)}" aria-label="Drag to reorder ${esc(t.title)}">${icon('grip')}</button>
+      </div>
     </div>
-    ${expanded?`<div class="task-details"><textarea data-note-id="${esc(t.id)}" rows="2" placeholder="Notes or links…" aria-label="Notes for ${esc(t.title)}">${esc(t.notes)}</textarea><div class="note-links">${renderLinks(t.notes)}</div><small>Notes save automatically. URLs open when tapped below.</small><button class="detail-star-button" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-pressed="${t.starred}">${icon('sparkles')}<span>${t.starred?'Remove Sparkles':'Mark important'}</span></button></div>`:''}
+    ${expanded?`<div class="task-details"><textarea data-note-id="${esc(t.id)}" rows="2" placeholder="Notes or links…" aria-label="Notes for ${esc(t.title)}">${esc(t.notes)}</textarea><div class="note-links">${renderLinks(t.notes)}</div><button class="detail-star-button" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-pressed="${t.starred}">${icon('sparkles')}<span>${t.starred?'Unmark important':'Mark important'}</span></button></div>`:''}
   </article>`;
 }
 function menuHtml(){
