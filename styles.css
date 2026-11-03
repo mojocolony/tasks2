@@ -107,7 +107,7 @@ button svg{pointer-events:none}
 .pull-hint.show{transform:translate(-50%,0)}
 .pull-hint.ready{color:var(--blue);border-color:var(--blue)}
 .menu-scrim{position:fixed;inset:0;background:rgba(0,0,0,.22);z-index:35}
-.menu{position:fixed;z-index:36;top:calc(10px + env(safe-area-inset-top));right:max(10px,calc((100vw - 800px)/2 + 15px));width:min(342px,calc(100vw - 20px));max-height:calc(100vh - 30px);overflow:auto;border:1px solid var(--fine);border-radius:17px;background:var(--bg);box-shadow:0 12px 50px #0002;padding:17px}
+.menu{position:fixed;z-index:36;top:calc(10px + env(safe-area-inset-top));right:max(10px,calc((100vw - 800px)/2 + 15px));width:min(342px,calc(100vw - 20px));max-height:calc(100vh - 30px);max-height:calc(100dvh - 24px - env(safe-area-inset-top));overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;border:1px solid var(--fine);border-radius:17px;background:var(--bg);box-shadow:0 12px 50px #0002;padding:17px}
 .menu h2{font-size:var(--size);font-weight:600;margin:0 0 14px}
 .menu-label{font-size:var(--meta);color:var(--muted);margin:16px 0 7px}
 .menu-row{display:flex;gap:5px}
@@ -135,6 +135,29 @@ button svg{pointer-events:none}
 .drag-ghost{position:fixed;z-index:70;pointer-events:none;left:14px;top:14px;background:var(--surface);border:1px solid var(--blue);padding:13px 16px;border-radius:11px;box-shadow:0 10px 26px #0002;max-width:75vw;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:var(--size)}
 .drop-marker{height:3px;background:var(--blue);border-radius:8px;pointer-events:none}
 html.dragging,html.dragging *{user-select:none;-webkit-user-select:none}
+/* Mobile settings are a scrollable drawer sized to Safari's visible viewport,
+   not the larger layout viewport hidden behind its browser toolbar. */
+@media(max-width:640px){
+  .menu{
+    top:0;right:0;bottom:auto;left:auto;
+    width:min(390px,calc(100vw - 24px));
+    height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;
+    border-radius:18px 0 0 18px;border-right:0;
+    padding:max(18px,env(safe-area-inset-top)) 18px calc(48px + env(safe-area-inset-bottom));
+    overflow-y:auto;overflow-x:hidden;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+  }
+  .menu>.sheet-header{
+    position:sticky;top:0;z-index:2;
+    background:var(--bg);
+    padding:6px 0 12px;
+    border-bottom:1px solid var(--fine);
+  }
+  .menu .icon-button{min-width:46px;min-height:46px}
+  .menu-version{padding-bottom:8px}
+}
 @media(min-width:850px){.app{padding-top:25px}.topbar{margin-bottom:36px}.pages-tabs{margin-bottom:44px}}
 @media(max-width:390px){.app{padding-left:15px;padding-right:15px}.task-body{gap:4px}.task-check{min-width:36px}.task-star{min-width:32px}.drag-grip{min-width:28px}.task-menu{min-width:24px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
