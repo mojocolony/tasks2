@@ -1,6 +1,16 @@
-# Tasks — Now, Later & Someday (v0.1.12 preview)
+# Tasks — Now, Later & Someday (v0.2.0 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.2.0 cloud synchronization
+
+- Optional sign-in with the existing Supabase account. No signup is offered. Auth storage and `tasks2_*` cloud tables are isolated from other apps.
+- One-time **Back up & enable sync** control in Settings; existing local data is never replaced by an empty cloud snapshot. The automatic JSON backup starts before first synchronization.
+- Local-first IndexedDB and localStorage saves continue to work offline. On reconnect or foreground, changes synchronize automatically; Sync now and status are in Settings.
+- Conditional cloud writes using a revision compare-and-swap; divergent edits preserve losing text in conflict copies rather than discarding it.
+- Per-device theme/font settings stay local. Deletion and completed-task tombstones propagate. Sync baselines are stored independently in IndexedDB.
+- Sign out is limited to the Tasks 2 session. The original Tasks app and Dropbox data are completely untouched.
+- Sync code is pinned and cached as part of the Tasks 2 offline shell.
 
 ## v0.1.12 dark default Home Screen icon
 
