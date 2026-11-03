@@ -1,5 +1,5 @@
-import {cloudClient,cloudUser,cloudLogin,cloudLogout} from './cloud-client.mjs';
-import {authorize,synchronize} from './sync-repository.mjs';
+import {cloudClient,cloudUser,cloudLogin,cloudLogout} from './cloud-client.mjs?v=020';
+import {authorize,synchronize} from './sync-repository.mjs?v=020';
 
 const APPROVED='tasks2-cloud-enabled-v1:';
 const enabledFor=id=>{try{return localStorage.getItem(APPROVED+id)==='yes';}catch{return false;}};
