@@ -1,6 +1,11 @@
-# Tasks — Now & Later (v0.1.4 preview)
+# Tasks — Now & Later (v0.1.5 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.5 offline update fix
+
+- Replaced the service worker's cache-first behaviour with a network-first strategy and offline fallback. It now uses a new isolated cache namespace version and includes the versioned core module.
+- A normal refresh after the new service worker activates will load the latest published assets. Existing browser data and the separate original Tasks app are untouched.
 
 ## v0.1.4 adjustment
 
