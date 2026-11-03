@@ -348,6 +348,19 @@ function collapseAll(){state.lists.forEach(l=>l.collapsed=true);ui.menu=false;pe
 function onClick(event){
   const target=event.target.closest('[data-action]');if(!target)return;
   const {action,taskId,listId,value,page}=target.dataset;
+  if(action==='sync-now'){void sync.run();return;}
+  if(action==='enable-sync'){
+    if(!confirm('This will download a Tasks backup, then merge your tasks on this device with your cloud Tasks. Nothing will be deleted. Continue?'))return;
+    exportBackup();
+    ui.menu=true;render();
+    void sync.enable().catch(error=>{ui.menu=true;showToast(error.message||'Cloud setup failed');});
+    return;
+  }
+  if(action==='sign-out'){
+    if(sync.status.enabled&&sync.status.kind!=='synced'&&!confirm('Some changes may not have synchronized. They will remain on this device. Sign out anyway?'))return;
+    void sync.logout().then(()=>{ui.menu=true;render();}).catch(error=>showToast(error.message||'Could not sign out'));
+    return;
+  }
   if(root.dataset.suppressClick==='1' && ['toggle-expand','toggle-complete','toggle-star','edit-task','toggle-list'].includes(action))return;
   if(action==='page'){setPage(page);return;}
   if(action==='menu'){ui.menu=true;render();return;}
@@ -391,6 +404,11 @@ function onClick(event){
 function onSubmit(event){
   const form=event.target.closest('[data-form]');if(!form)return;
   event.preventDefault();const values=extractForm(form);
+  if(form.dataset.form==='cloud-login'){
+    void sync.login(values.email,values.password).then(()=>{ui.menu=true;render();})
+      .catch(error=>{ui.menu=true;showToast(error.message||'Could not sign in');});
+    return;
+  }
   try{
     if(form.dataset.form==='add'){
       const selected=state.lists.some(l=>l.id===values.listId)?values.listId:NOW;
@@ -576,8 +594,9 @@ async function boot(){
   if(DEMO&&state.tasks.length===0){seedDemo();save();}
   render();
   if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-    navigator.serviceWorker.register('./sw.js').catch(error=>console.warn('PWA offline setup unavailable',error));
+    navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(registration=>registration.update()).catch(error=>console.warn('PWA offline setup unavailable',error));
   }
+  void sync.initialize();
 }
 root.addEventListener('click',onClick);
 root.addEventListener('submit',onSubmit);
