@@ -127,11 +127,11 @@ function taskHtml(t){
     <div class="task-body">
       <button class="task-check ${t.completed?'checked':''}" role="checkbox" aria-checked="${t.completed}" type="button" data-action="toggle-complete" data-task-id="${esc(t.id)}" aria-label="${t.completed?'Uncomplete':'Complete'} ${esc(t.title)}">${icon(t.completed?'checked':'square')}</button>
       <button class="task-main" type="button" data-action="toggle-expand" data-task-id="${esc(t.id)}" aria-expanded="${expanded}"><span class="task-title">${esc(t.title)}</span>${t.notes.trim()&&!expanded?`<span class="note-presence">${icon('note')}</span>`:''}</button>
-      ${t.starred?`<button class="task-star active" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-label="Remove lightning from ${esc(t.title)}">⚡</button>`:`<button class="task-star" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-label="Star ${esc(t.title)}">⚡</button>`}
+      ${t.starred?`<button class="task-star active" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-label="Remove lightning from ${esc(t.title)}">⚡</button>`:''}
       <button class="task-menu" type="button" data-action="edit-task" data-task-id="${esc(t.id)}" aria-label="Task actions for ${esc(t.title)}">${icon('dots')}</button>
       <button class="drag-grip" type="button" data-drag-task="${esc(t.id)}" aria-label="Drag to reorder ${esc(t.title)}">${icon('grip')}</button>
     </div>
-    ${expanded?`<div class="task-details"><textarea data-note-id="${esc(t.id)}" rows="2" placeholder="Notes or links…" aria-label="Notes for ${esc(t.title)}">${esc(t.notes)}</textarea><div class="note-links">${renderLinks(t.notes)}</div><small>Notes save automatically. URLs open when tapped below.</small></div>`:''}
+    ${expanded?`<div class="task-details"><textarea data-note-id="${esc(t.id)}" rows="2" placeholder="Notes or links…" aria-label="Notes for ${esc(t.title)}">${esc(t.notes)}</textarea><div class="note-links">${renderLinks(t.notes)}</div><small>Notes save automatically. URLs open when tapped below.</small><button class="detail-star-button" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-pressed="${t.starred}">${t.starred?'⚡ Remove lightning':'⚡ Mark important'}</button></div>`:''}
   </article>`;
 }
 function menuHtml(){
@@ -316,7 +316,7 @@ function onSubmit(event){
   try{
     if(form.dataset.form==='add'){
       const selected=state.lists.some(l=>l.id===values.listId)?values.listId:NOW;
-      addTask(state,{title:values.title,notes:values.notes,listId:selected,starred:state.prefs.starredOnly});
+      addTask(state,{title:values.title,notes:values.notes,listId:selected});
       state.lists.find(l=>l.id===selected).collapsed=false;
       ui.sheet=null;save();showToast('Task added');return;
     }
