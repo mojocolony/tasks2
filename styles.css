@@ -21,8 +21,8 @@
   }
 }
 *{box-sizing:border-box}
-html{min-height:100%;background:var(--bg);overscroll-behavior-y:contain}
-body{min-height:100vh;margin:0;background:var(--bg);color:var(--ink);font:400 var(--size)/1.45 'IBM Plex Mono','SFMono-Regular',Consolas,monospace;-webkit-font-smoothing:antialiased;overscroll-behavior-y:contain}
+html{min-height:100%;background:var(--bg);overscroll-behavior-y:none}
+body{min-height:100vh;margin:0;background:var(--bg);color:var(--ink);font:400 var(--size)/1.45 'IBM Plex Mono','SFMono-Regular',Consolas,monospace;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
@@ -99,7 +99,7 @@ button svg{pointer-events:none}
 .filter-banner{color:var(--muted);font-size:var(--meta);margin:-8px 0 25px}
 .filter-banner button{color:var(--blue);border:0;background:none;text-decoration:underline;font:inherit}
 .filter-banner svg{width:16px;height:16px;vertical-align:-3px;margin-right:5px;color:var(--blue)}
-.pull-hint{position:fixed;bottom:calc(160px + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,230px);z-index:30;border:1px solid var(--fine);border-radius:999px;background:var(--surface);box-shadow:0 5px 20px #0001;padding:9px 15px;color:var(--muted);font-size:var(--meta);white-space:nowrap;transition:transform .12s ease;pointer-events:none}
+.pull-hint{position:fixed;top:calc(6px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-130px);z-index:30;border:1px solid var(--fine);border-radius:999px;background:var(--surface);box-shadow:0 5px 20px #0001;padding:9px 15px;color:var(--muted);font-size:var(--meta);white-space:nowrap;transition:transform .12s ease;pointer-events:none}
 .pull-hint.show{transform:translate(-50%,0)}
 .pull-hint.ready{color:var(--blue);border-color:var(--blue)}
 .menu-scrim{position:fixed;inset:0;background:rgba(0,0,0,.22);z-index:35}
