@@ -2,7 +2,9 @@ import {
   NOW, LATER, SOMEDAY, VERSION, APP_ID, makeId, emptyState, normalizeState, activeTasks,
   addTask, toggleCompleted, clearCompleted, restoreCleared, removeTask, restoreTask,
   moveTask, addList, deleteListToLater
-} from './core.mjs?v=012';
+} from './core.mjs?v=020';
+import {createSyncController} from './src/sync-controller.mjs?v=020';
+import {mergeWorkspaces,cloudEqual} from './src/sync-core.mjs?v=020';
 
 const DB_NAME = 'tasks-now-later-v1';
 const DB_STORE = 'documents';
@@ -59,19 +61,19 @@ function openDb(){
   });
   return dbPromise;
 }
-async function dbGet(){
+async function dbGet(key=DB_KEY){
   const db=await openDb(); if(!db)return null;
   return new Promise(resolve=>{
     const tx=db.transaction(DB_STORE,'readonly');
-    const r=tx.objectStore(DB_STORE).get(DB_KEY);
+    const r=tx.objectStore(DB_STORE).get(key);
     r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>resolve(null);
   });
 }
-async function dbPut(snapshot){
+async function dbPut(snapshot,key=DB_KEY){
   const db=await openDb(); if(!db)return;
   return new Promise((resolve,reject)=>{
     const tx=db.transaction(DB_STORE,'readwrite');
-    tx.objectStore(DB_STORE).put(snapshot,DB_KEY);
+    tx.objectStore(DB_STORE).put(snapshot,key);
     tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
   });
 }
@@ -81,6 +83,7 @@ function save(){
   const snapshot=structuredClone(state);
   try {localStorage.setItem(BACKUP_KEY,JSON.stringify(snapshot));}catch(err){console.warn('Backup storage unavailable',err);}
   writeQueue=writeQueue.then(()=>dbPut(snapshot)).catch(err=>{console.warn('Offline storage failed',err);showToast('Storage error — export a backup');});
+  sync?.changed();
 }
 let state=emptyState();
 let ui={menu:false,sheet:null,page:'main',expanded:new Set(),swipeOpen:null,toast:null,toastTimer:null,dragging:false};
