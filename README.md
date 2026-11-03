@@ -1,6 +1,13 @@
-# Tasks — Now, Later & Someday (v0.2.0 preview)
+# Tasks — Now, Later & Someday (v0.2.1 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.2.1 light Home Screen icon
+
+- Changed the installed icon to a lighter, more restrained Lucide Square Check treatment, matching the user's other iOS apps.
+- Off-white `#F5F6F7` canvas with an approximately 82% white rounded tile and subtle border; blue `#1BADF8` Square Check at about 51% of the overall icon width, preserving the Lucide path and a 2-unit SVG stroke.
+- New SVG and optimized 192px/512px PNG assets are versioned; prior dark assets remain available.
+- No changes to task state, IndexedDB, Supabase synchronization, or unrelated apps.
 
 ## v0.2.0 cloud synchronization
 

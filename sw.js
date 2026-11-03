@@ -1,6 +1,6 @@
 /* Isolated service-worker scope and cache: never touches the existing Tasks app. */
-const CACHE = 'tasks-now-later-preview-v014';
-const APP_FILES = ['./', './index.html', './styles.css?v=020', './app.js?v=020', './core.mjs?v=020', './src/sync-controller.mjs?v=020', './src/cloud-client.mjs?v=020', './src/sync-repository.mjs?v=020', './src/sync-core.mjs?v=020', './manifest.webmanifest?v=012', './icons/icon.svg?v=012', './icons/icon-dark.svg?v=012', './icons/icon-192-dark.png?v=012', './icons/icon-512-dark.png?v=012'];
+const CACHE = 'tasks-now-later-preview-v015';
+const APP_FILES = ['./', './index.html', './styles.css?v=020', './app.js?v=021', './core.mjs?v=021', './src/sync-controller.mjs?v=020', './src/cloud-client.mjs?v=020', './src/sync-repository.mjs?v=020', './src/sync-core.mjs?v=020', './manifest.webmanifest?v=021', './icons/icon-light.svg?v=021', './icons/icon-dark.svg?v=012', './icons/icon-192-light.png?v=021', './icons/icon-512-light.png?v=021'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(c => c.addAll(APP_FILES)).then(() => self.skipWaiting()));
 });

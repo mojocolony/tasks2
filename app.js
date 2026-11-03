@@ -2,7 +2,7 @@ import {
   NOW, LATER, SOMEDAY, VERSION, APP_ID, makeId, emptyState, normalizeState, activeTasks,
   addTask, toggleCompleted, clearCompleted, restoreCleared, removeTask, restoreTask,
   moveTask, addList, deleteListToLater
-} from './core.mjs?v=020';
+} from './core.mjs?v=021';
 import {createSyncController} from './src/sync-controller.mjs?v=020';
 import {mergeWorkspaces,cloudEqual} from './src/sync-core.mjs?v=020';
 
