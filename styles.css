@@ -117,6 +117,23 @@ button svg{pointer-events:none}
 .menu-action svg{width:18px;height:18px;color:var(--muted)}
 .menu-action:disabled{opacity:.45;cursor:not-allowed}
 .menu-subtitle{color:var(--muted);font-size:11px;line-height:1.5;margin:4px 0 10px}
+.sync-login{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.sync-login label{font-size:var(--meta);color:var(--muted)}
+.sync-login input{width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--fine);border-radius:9px;background:var(--surface);font-size:max(16px,calc(var(--size)*.84));outline:none}
+.sync-login input:focus{border-color:var(--blue)}
+.sync-login .sync-button{margin-top:7px;min-height:48px;width:100%;border-color:var(--blue);color:var(--blue);font-size:var(--meta);font-weight:600}
+.sync-login .sync-button:disabled{opacity:.6}
+.sync-email{font-size:var(--meta);overflow-wrap:anywhere;margin:6px 0 12px}
+.sync-status{display:flex;align-items:center;gap:10px;min-height:36px;font-size:var(--meta);line-height:1.4}
+.sync-dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.sync-dot.synced{background:var(--blue)}
+.sync-dot.pending,.sync-dot.syncing{background:#dba252}
+.sync-dot.offline,.sync-dot.error{background:var(--delete-bg)}
+.sync-error{font-size:var(--meta);line-height:1.5;color:var(--danger);overflow-wrap:anywhere}
+.sync-action{color:var(--blue);font-weight:600}
+.sync-action svg{color:var(--blue)}
+.menu .sync-login + .menu-subtitle,.menu .sync-email + .menu-subtitle{font-size:max(12px,calc(var(--meta)*.9))}
+
 .menu-version{font-size:12px;color:var(--muted);margin-top:18px}
 .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.26);z-index:38}
 .sheet{position:fixed;z-index:39;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,670px);padding:18px clamp(18px,4vw,30px) calc(26px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;background:var(--bg);box-shadow:0 -9px 35px #0001;max-height:90dvh;overflow-y:auto}
