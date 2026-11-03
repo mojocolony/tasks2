@@ -1,7 +1,7 @@
 export const NOW = 'now';
 export const LATER = 'later';
 export const SOMEDAY = 'someday';
-export const VERSION = '0.1.12-preview';
+export const VERSION = '0.2.0-preview';
 export const APP_ID = 'tasks-now-later';
 const stamp = () => new Date().toISOString();
 export const makeId = () => crypto.randomUUID();
