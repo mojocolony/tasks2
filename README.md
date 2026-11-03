@@ -1,6 +1,10 @@
-# Tasks — Now & Later (v0.1.1 preview)
+# Tasks — Now & Later (v0.1.2 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.2 correction
+
+New tasks are unstarred regardless of filter state. The ⚡ symbol appears on a row only when explicitly starred. Expand a task to mark it important or remove its star.
 
 ## Implemented in this preview
 
