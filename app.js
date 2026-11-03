@@ -180,6 +180,38 @@ function taskHtml(t){
     ${expanded?`<div class="task-details"><textarea data-note-id="${esc(t.id)}" rows="2" placeholder="Notes or links…" aria-label="Notes for ${esc(t.title)}">${esc(t.notes)}</textarea><div class="note-links">${renderLinks(t.notes)}</div><button class="detail-star-button" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-pressed="${t.starred}">${icon('sparkles')}<span>${t.starred?'Unmark important':'Mark important'}</span></button></div>`:''}
   </article>`;
 }
+
+function syncPanelHtml(){
+  const value=sync.status;
+  const error=value.error?`<p class="sync-error" role="alert">${esc(value.error)}</p>`:'';
+  if(!value.user){
+    return `<p class="menu-subtitle">Cloud sync is optional. Your tasks stay on this device until you enable it.</p>
+      <form class="sync-login" data-form="cloud-login">
+        <label for="syncEmail">Email</label>
+        <input id="syncEmail" name="email" type="email" autocomplete="username" placeholder="Your existing account" required>
+        <label for="syncPassword">Password</label>
+        <input id="syncPassword" name="password" type="password" autocomplete="current-password" required>
+        <button class="secondary-btn sync-button" type="submit" ${value.kind==='connecting'?'disabled':''}>${value.kind==='connecting'?'Signing in…':'Sign in'}</button>
+      </form>${error}
+      <p class="menu-subtitle">Use the account you already use for Watching. No new account is created.</p>`;
+  }
+  const account=`<p class="sync-email">${esc(value.user.email||'Signed in')}</p>`;
+  if(!value.enabled){
+    return account+`<p class="menu-subtitle">Sync is not yet enabled on this device. Your local tasks will be preserved and merged with any cloud tasks.</p>
+      <button class="menu-action sync-action" type="button" data-action="enable-sync">Back up &amp; enable sync ${icon('upload')}</button>
+      ${error}
+      <button class="menu-action" type="button" data-action="sign-out">Sign out ${icon('arrow')}</button>`;
+  }
+  const labels={synced:'All changes synced',syncing:'Synchronizing…',pending:'Changes waiting to sync',offline:'Offline · changes saved locally',error:'Sync paused · local data safe'};
+  const label=labels[value.kind]||'Sync enabled';
+  const when=value.lastSynced?`<p class="menu-subtitle">Last synced ${esc(value.lastSynced.toLocaleString())}</p>`:'';
+  return account+`<div class="sync-status" role="status"><span class="sync-dot ${esc(value.kind)}"></span>${esc(label)}</div>
+    ${error}${when}
+    <button class="menu-action sync-action" type="button" data-action="sync-now" ${value.busy?'disabled':''}>Sync now ${icon('rotate')}</button>
+    <button class="menu-action" type="button" data-action="sign-out">Sign out ${icon('arrow')}</button>
+    <p class="menu-subtitle">Offline edits are saved here and synchronized when you reconnect.</p>`;
+}
+
 function menuHtml(){
   if(!ui.menu)return '';
   const f=state.prefs.font,t=state.prefs.theme;
@@ -196,9 +228,8 @@ function menuHtml(){
     <button class="menu-action" data-action="restore-cleared" ${clearedCount?'':'disabled'}>Recently cleared (${clearedCount}) ${icon('rotate')}</button>
     <button class="menu-action" data-action="export">Export Tasks backup ${icon('download')}</button>
     <button class="menu-action" data-action="import">Import Tasks backup ${icon('upload')}</button>
-    <div class="menu-label">Account</div>
-    <p class="menu-subtitle">Local preview · saved on this device. Cloud account syncing has not been connected.</p>
-    <button class="menu-action" disabled title="Available after cloud account setup">Sign out ${icon('arrow')}</button>
+    <div class="menu-label">Account · Sync</div>
+    ${syncPanelHtml()}
     <div class="menu-version">Tasks v${VERSION}</div>
   </aside>`;
 }
