@@ -1,6 +1,7 @@
 export const NOW = 'now';
 export const LATER = 'later';
-export const VERSION = '0.1.8-preview';
+export const SOMEDAY = 'someday';
+export const VERSION = '0.1.9-preview';
 export const APP_ID = 'tasks-now-later';
 const stamp = () => new Date().toISOString();
 export const makeId = () => crypto.randomUUID();
@@ -11,6 +12,7 @@ export function emptyState(){
     lists: [
       {id: NOW, name:'Now', order:0, collapsed:false, permanent:true},
       {id: LATER, name:'Later', order:1, collapsed:false, permanent:true},
+      {id: SOMEDAY, name:'Someday', order:2, collapsed:false, permanent:true},
     ],
     tasks: [],
     prefs: {page:'main',font:'medium',theme:'light',starredOnly:false}
@@ -20,10 +22,12 @@ export function normalizeState(input){
   if (!input || input.app !== APP_ID || !Array.isArray(input.lists) || !Array.isArray(input.tasks)) return null;
   const s = structuredClone(input);
   s.lists = s.lists.filter(l=>l&&typeof l.id==='string'&&typeof l.name==='string');
-  for(const [i,id] of [NOW,LATER].entries()) {
-    if (!s.lists.some(l=>l.id===id)) s.lists.unshift({id,name:id==='now'?'Now':'Later',order:i,collapsed:false,permanent:true});
+  // Upgrade older local snapshots in place without altering existing tasks or lists.
+  const permanentNames = {[NOW]:'Now',[LATER]:'Later',[SOMEDAY]:'Someday'};
+  for(const [order,id] of [NOW,LATER,SOMEDAY].entries()) {
+    if (!s.lists.some(l=>l.id===id)) s.lists.push({id,name:permanentNames[id],order,collapsed:false,permanent:true});
   }
-  s.lists = s.lists.map(l=>({...l,permanent:l.id===NOW||l.id===LATER,collapsed:Boolean(l.collapsed),order:Number.isFinite(l.order)?l.order:100}));
+  s.lists = s.lists.map(l=>({...l,permanent:l.id===NOW||l.id===LATER||l.id===SOMEDAY,collapsed:Boolean(l.collapsed),order:Number.isFinite(l.order)?l.order:100}));
   s.tasks = s.tasks.filter(t=>t&&typeof t.id==='string'&&typeof t.title==='string'&&typeof t.listId==='string').map(t=>({
     ...t,notes:String(t.notes??''),completed:Boolean(t.completed),starred:Boolean(t.starred),
     order:Number.isFinite(t.order)?t.order:0,deletedAt:t.deletedAt||null,clearedAt:t.clearedAt||null,
