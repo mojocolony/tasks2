@@ -6,7 +6,9 @@ import {
 const s=emptyState();
 assert.equal(s.lists.length,2);
 const first=addTask(s,{title:'First',listId:'now'});
+assert.equal(first.starred,false,'new tasks are unstarred by default');
 const second=addTask(s,{title:'Second',listId:'now',notes:'https://example.com/',starred:true});
+assert.equal(second.starred,true,'explicit star should be retained');
 assert.equal(activeTasks(s,'now').length,2);
 assert.equal(toggleCompleted(s,first.id),true);
 assert.equal(s.tasks.find(x=>x.id===first.id).completed,true);
