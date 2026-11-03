@@ -15,6 +15,7 @@ const icons = {
   logo: '<rect width="17" height="17" x="3.5" y="3.5" rx="4"/><path d="m8 12 3 3 6-7"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  sparkles: '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
   square: '<rect width="18" height="18" x="3" y="3" rx="5"/>',
   checked: '<rect width="18" height="18" x="3" y="3" rx="5"/><path d="m7 12 3 3 7-7"/>',
   down: '<path d="m6 9 6 6 6-6"/>',
@@ -116,7 +117,7 @@ function sectionHtml(list){
     </div>
     ${!collapsed?`<div class="task-items" data-drop-list="${esc(list.id)}">
       ${filtered.map(taskHtml).join('')}
-      ${!filtered.length?`<div class="empty-message">${state.prefs.starredOnly?'No ⚡ tasks here.':'No tasks.'}</div>`:''}
+      ${!filtered.length?`<div class="empty-message">${state.prefs.starredOnly?'No Sparkles tasks here. Tap Show all, then expand a task to mark it important.':'No tasks.'}</div>`:''}
     </div>`:''}
   </section>`;
 }
@@ -127,11 +128,11 @@ function taskHtml(t){
     <div class="task-body">
       <button class="task-check ${t.completed?'checked':''}" role="checkbox" aria-checked="${t.completed}" type="button" data-action="toggle-complete" data-task-id="${esc(t.id)}" aria-label="${t.completed?'Uncomplete':'Complete'} ${esc(t.title)}">${icon(t.completed?'checked':'square')}</button>
       <button class="task-main" type="button" data-action="toggle-expand" data-task-id="${esc(t.id)}" aria-expanded="${expanded}"><span class="task-title">${esc(t.title)}</span>${t.notes.trim()&&!expanded?`<span class="note-presence">${icon('note')}</span>`:''}</button>
-      ${t.starred?`<button class="task-star active" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-label="Remove lightning from ${esc(t.title)}">⚡</button>`:''}
+      ${t.starred?`<button class="task-star active" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-label="Remove Sparkles from ${esc(t.title)}">${icon('sparkles')}</button>`:''}
       <button class="task-menu" type="button" data-action="edit-task" data-task-id="${esc(t.id)}" aria-label="Task actions for ${esc(t.title)}">${icon('dots')}</button>
       <button class="drag-grip" type="button" data-drag-task="${esc(t.id)}" aria-label="Drag to reorder ${esc(t.title)}">${icon('grip')}</button>
     </div>
-    ${expanded?`<div class="task-details"><textarea data-note-id="${esc(t.id)}" rows="2" placeholder="Notes or links…" aria-label="Notes for ${esc(t.title)}">${esc(t.notes)}</textarea><div class="note-links">${renderLinks(t.notes)}</div><small>Notes save automatically. URLs open when tapped below.</small><button class="detail-star-button" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-pressed="${t.starred}">${t.starred?'⚡ Remove lightning':'⚡ Mark important'}</button></div>`:''}
+    ${expanded?`<div class="task-details"><textarea data-note-id="${esc(t.id)}" rows="2" placeholder="Notes or links…" aria-label="Notes for ${esc(t.title)}">${esc(t.notes)}</textarea><div class="note-links">${renderLinks(t.notes)}</div><small>Notes save automatically. URLs open when tapped below.</small><button class="detail-star-button" type="button" data-action="toggle-star" data-task-id="${esc(t.id)}" aria-pressed="${t.starred}">${icon('sparkles')}<span>${t.starred?'Remove Sparkles':'Mark important'}</span></button></div>`:''}
   </article>`;
 }
 function menuHtml(){
@@ -200,7 +201,7 @@ function render(){
       <button class="tab ${ui.page==='main'?'active':''}" type="button" data-action="page" data-page="main" aria-current="${ui.page==='main'?'page':'false'}">TASKS</button>
       <button class="tab ${ui.page==='lists'?'active':''}" type="button" data-action="page" data-page="lists" aria-current="${ui.page==='lists'?'page':'false'}">LISTS</button>
     </nav>
-    ${state.prefs.starredOnly?`<p class="filter-banner">⚡ Showing starred tasks. <button type="button" data-action="filter">Show all</button></p>`:''}
+    ${state.prefs.starredOnly?`<p class="filter-banner">${icon("sparkles")} Showing only Sparkles tasks. <button type="button" data-action="filter">Show all</button></p>`:''}
     <main class="page ${ui.page==='main'?'active':''}" data-page="main">
       ${sectionHtml(state.lists.find(l=>l.id===NOW))}
       ${sectionHtml(state.lists.find(l=>l.id===LATER))}
@@ -213,9 +214,9 @@ function render(){
   <div class="pill" aria-label="Quick actions">
     <button type="button" data-action="add" aria-label="Add task">${icon('plus')}</button>
     <span class="pill-divider"></span>
-    <button type="button" class="${state.prefs.starredOnly?'is-active':''}" data-action="filter" aria-label="${state.prefs.starredOnly?'Show all tasks':'Show starred tasks'}" aria-pressed="${state.prefs.starredOnly}"><span class="bolt">⚡</span></button>
+    <button type="button" class="${state.prefs.starredOnly?'is-active':''}" data-action="filter" aria-label="${state.prefs.starredOnly?'Show all tasks':'Show Sparkles tasks'}" aria-pressed="${state.prefs.starredOnly}">${icon('sparkles')}</button>
   </div>
-  <div id="pullHint" class="pull-hint" aria-live="polite">Pull further to clear completed</div>
+  <div id="pullHint" class="pull-hint" aria-live="polite">Pull up further to clear completed</div>
   ${menuHtml()}${formHtml()}
   ${ui.toast?`<div class="toast" role="status"><span>${esc(ui.toast.msg)}</span>${ui.toast.undo?`<button type="button" data-action="undo">Undo</button>`:''}</div>`:''}
   <input type="file" id="backupImport" accept=".json,application/json" hidden>
@@ -354,15 +355,19 @@ async function onImport(event){
 }
 
 // Mobile gestures: horizontal swipe on a row reveals Delete; horizontal swipe on the page switches pages.
-// A deliberate downward pull beginning near the top of the page clears only this page's completed tasks.
+// Clear completed tasks with a deliberate UPWARD overscroll from empty space near the BOTTOM of the page.
+// Start away from the iOS home-indicator edge, and require a full 120px pull plus Undo.
+// Ordinary vertical scrolling and pull-to-refresh are not intercepted.
 let touch=null;
 function onTouchStart(event){
   if(event.touches.length!==1||ui.sheet||ui.menu||ui.dragging)return;
-  const e=event.touches[0];const target=event.target;
+  const e=event.touches[0],target=event.target;
   if(target.closest('input,textarea,select,a,.pill,.task-details'))return;
   const row=target.closest('.task-shell');
-  const atTop=window.scrollY<5;
-  const pullEligible=atTop&&e.clientY<Math.min(460,Math.max(300,innerHeight*.55))&&!target.closest('.task-shell,.pill,.menu,.sheet,.icon-button');
+  const scrollHeight=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
+  const atBottom=window.scrollY+innerHeight>=scrollHeight-8;
+  const bottomStart=e.clientY>innerHeight-Math.min(230,innerHeight*.36)&&e.clientY<innerHeight-22;
+  const pullEligible=atBottom&&bottomStart&&!target.closest('button,.task-shell,.pill,.menu,.sheet,.icon-button')&&countPageDone()>0;
   touch={startX:e.clientX,startY:e.clientY,row:row?.dataset.taskId??null,pullEligible,gesture:null,dx:0,dy:0};
 }
 function onTouchMove(event){
@@ -370,7 +375,7 @@ function onTouchMove(event){
   const e=event.touches[0];touch.dx=e.clientX-touch.startX;touch.dy=e.clientY-touch.startY;
   if(!touch.gesture&&Math.hypot(touch.dx,touch.dy)>14){
     if(Math.abs(touch.dx)>Math.abs(touch.dy)*1.3)touch.gesture='horizontal';
-    else if(touch.pullEligible&&touch.dy>15&&touch.dy>Math.abs(touch.dx)*1.5)touch.gesture='pull';
+    else if(touch.pullEligible&&touch.dy< -15&&-touch.dy>Math.abs(touch.dx)*1.5)touch.gesture='pull';
     else touch.gesture='scroll';
   }
   if(touch.gesture==='horizontal'){
@@ -383,14 +388,19 @@ function onTouchMove(event){
   if(touch.gesture==='pull'){
     if(event.cancelable)event.preventDefault();
     const hint=root.querySelector('#pullHint');
-    if(hint){hint.classList.add('show');hint.classList.toggle('ready',touch.dy>=120);hint.textContent=touch.dy>=120?`Release to clear ${countPageDone()} completed`:'Pull further to clear completed';}
+    if(hint){
+      const ready=touch.dy<=-120;
+      hint.classList.add('show');
+      hint.classList.toggle('ready',ready);
+      hint.textContent=ready?`Release to clear ${countPageDone()} completed`:'Pull up further to clear completed';
+    }
   }
 }
 function onTouchEnd(){
   if(!touch)return;const g=touch;touch=null;
   root.querySelector('#pullHint')?.classList.remove('show','ready');
   if(ui.dragging)return;
-  if(g.gesture==='pull'&&g.dy>=120){
+  if(g.gesture==='pull'&&g.dy<=-120){
     root.dataset.suppressClick='1';setTimeout(()=>{delete root.dataset.suppressClick;},350);
     if(countPageDone())clearCurrent();else showToast('No completed tasks to clear');
   }else if(g.gesture==='horizontal'){
