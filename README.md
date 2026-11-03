@@ -1,6 +1,12 @@
-# Tasks — Now, Later & Someday (v0.1.9 preview)
+# Tasks — Now, Later & Someday (v0.1.10 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.10 Square Check icon
+
+- Uses the exact supplied Lucide Square Check SVG in blue `#1badf8` with stroke width 2 as the brand mark and SVG browser favicon.
+- New 192px and 512px Home Screen PNG icons use the same symbol on white for good contrast.
+- Icon and CSS/JS/manifest URLs are versioned to make iPhone updates more reliable. No task data or sync behaviour is changed.
 
 ## v0.1.9 Someday list
 
