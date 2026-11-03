@@ -1,4 +1,4 @@
-import {validateWorkspace, mergeWorkspaces, cloudEqual} from './sync-core.mjs';
+import {validateWorkspace, mergeWorkspaces, cloudEqual} from './sync-core.mjs?v=020';
 const WORKSPACES='tasks2_workspaces';
 export async function authorize(client,userId){
   const {data,error}=await client.from('tasks2_access').select('user_id').eq('user_id',userId).maybeSingle();
