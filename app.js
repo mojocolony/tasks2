@@ -2,7 +2,7 @@ import {
   NOW, LATER, VERSION, APP_ID, makeId, emptyState, normalizeState, activeTasks,
   addTask, toggleCompleted, clearCompleted, restoreCleared, removeTask, restoreTask,
   moveTask, addList, deleteListToLater
-} from './core.mjs?v=016';
+} from './core.mjs?v=017';
 
 const DB_NAME = 'tasks-now-later-v1';
 const DB_STORE = 'documents';
