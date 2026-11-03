@@ -1,6 +1,13 @@
-# Tasks — Now, Later & Someday (v0.1.11 preview)
+# Tasks — Now, Later & Someday (v0.1.12 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.12 dark default Home Screen icon
+
+- Default installed icon is the exact Lucide Square Check (`#1BADF8`, 2px vector stroke) on charcoal `#171B1F`.
+- New 192px and 512px dark PNGs are used by the manifest and Apple touch icon; previous light PNGs and SVG remain available.
+- Supported browsers use the light SVG in light appearance and the dark-background SVG otherwise.
+- Versioned icon URLs and service-worker cache; no task data or synchronization behaviour changed.
 
 ## v0.1.11 icon asset refresh
 
