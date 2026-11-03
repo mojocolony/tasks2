@@ -1,6 +1,11 @@
-# Tasks — Now & Later (v0.1.6 preview)
+# Tasks — Now & Later (v0.1.7 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.7 delete colour
+
+- Swipe-to-delete uses the requested coral `#FCA886`, with dark text/icons for legibility in light and provisional dark themes.
+- This colour applies only to the swipe-to-delete surface, leaving other danger controls and task data untouched.
 
 ## v0.1.6 expanded-task layout fix
 
