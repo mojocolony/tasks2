@@ -87,6 +87,46 @@ function save(){
 }
 let state=emptyState();
 let ui={menu:false,sheet:null,page:'main',expanded:new Set(),swipeOpen:null,toast:null,toastTimer:null,dragging:false};
+const BASELINE_PREFIX='sync-baseline:';
+async function readBaseline(userId){
+  const key=BASELINE_PREFIX+userId;
+  const indexed=await dbGet(key);
+  if(indexed)return normalizeState(indexed);
+  try{return normalizeState(JSON.parse(localStorage.getItem('tasks2-'+key)||'null'));}
+  catch{return null;}
+}
+async function writeBaseline(userId,snapshot){
+  const db=await openDb();
+  if(db){await dbPut(snapshot,BASELINE_PREFIX+userId);return;}
+  try{localStorage.setItem('tasks2-'+BASELINE_PREFIX+userId,JSON.stringify(snapshot));}
+  catch{throw Error('Cloud saved, but sync history could not be stored on this device.');}
+}
+async function adoptCloud(remoteSnapshot,localAtStart,conflicts){
+  const current=structuredClone(state);
+  const merged=cloudEqual(current,localAtStart)
+    ? remoteSnapshot
+    : mergeWorkspaces(current,remoteSnapshot,localAtStart).workspace;
+  const normalized=normalizeState(merged);
+  if(!normalized)throw Error('Cloud sent an invalid Tasks 2 workspace.');
+  normalized.prefs=current.prefs;
+  if(!cloudEqual(current,normalized)){
+    state=normalized;
+    const snapshot=structuredClone(state);
+    try{localStorage.setItem(BACKUP_KEY,JSON.stringify(snapshot));}
+    catch(error){console.warn('Local backup unavailable',error);}
+    writeQueue=writeQueue.then(()=>dbPut(snapshot)).catch(error=>console.warn('Sync snapshot storage failed',error));
+    if(!document.activeElement?.matches('input,textarea,[contenteditable]'))render();
+  }
+  if(conflicts.length)showToast(conflicts.length+' simultaneous edit(s) kept as conflict copies');
+  return !cloudEqual(state,remoteSnapshot);
+}
+const sync=createSyncController({
+  getLocal:()=>structuredClone(state),
+  adopt:adoptCloud,
+  loadBaseline:readBaseline,
+  storeBaseline:writeBaseline,
+  onStatus:()=>{if(ui.menu)render();}
+});
 function setToast(msg,undo){
   clearTimeout(ui.toastTimer);
   ui.toast={msg,undo};
