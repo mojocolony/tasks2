@@ -1,6 +1,12 @@
-# Tasks — Now & Later (v0.1.2 preview)
+# Tasks — Now & Later (v0.1.3 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.3 changes
+
+- Replaced all ⚡ controls with the exact Lucide Sparkles SVG. Existing starred data stays unchanged.
+- A Sparkles-only filter may display empty lists until a task is marked important; the empty state now explains this and the filter banner offers Show all.
+- Replaced the downward clear gesture with a deliberate **upward pull from blank space at the bottom of the page** (120px threshold). The browser can use its normal downward refresh gesture. Undo and Recently Cleared are preserved.
 
 ## v0.1.2 correction
 
@@ -14,9 +20,9 @@ New tasks are unstarred regardless of filter state. The ⚡ symbol appears on a 
 - Tap checkbox to complete/uncomplete; completed tasks remain crossed out and dimmed.
 - Tap task title to expand a note editor. Text is saved automatically. HTTP/HTTPS URLs are shown as clickable links underneath.
 - Swipe a task left to reveal Delete. Deleted tasks have an Undo action.
-- Pull down deliberately from near the top of a page to clear completed tasks on that page (120px gesture threshold); Undo and a Recently Cleared restore action are provided.
+- Pull up deliberately from blank space at the bottom of the page to clear completed tasks on that page (120px gesture threshold); Undo and a Recently Cleared restore action are provided.
 - Drag tasks within or between lists, including collapsed/empty lists; drag to the screen edge to flip pages. There is a dedicated drag handle as a fallback.
-- Floating pill: outlined in blue with a white (or dark-theme) interior and blue icons; add above, lightning/star filter below.
+- Floating pill: outlined in blue with a white (or dark-theme) interior and blue icons; add above, Sparkles-only filter below.
 - IBM Plex Mono; font scale options; selected light palette; provisional dark mode.
 - Offline app shell via a uniquely scoped service worker, and local data persistence using IndexedDB with a localStorage backup.
 - JSON export/import restricted to this app's own format (does not accept backups from the older app).
