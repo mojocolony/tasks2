@@ -58,7 +58,9 @@ button svg{pointer-events:none}
 .task-items.empty-target:after{content:'Drop here';display:block;font-size:var(--meta);color:var(--muted);padding:12px}
 .task-shell{position:relative;border-bottom:1px solid var(--fine);overflow:hidden;touch-action:pan-y}
 .task-shell.drag-source{opacity:.24}
-.swipe-delete{position:absolute;right:0;top:0;bottom:0;width:92px;border:0;background:var(--danger);color:white;font-size:var(--meta);display:flex;justify-content:center;align-items:center;gap:5px}
+.task-row{position:relative;overflow:hidden;background:var(--bg)}
+.swipe-delete{position:absolute;right:0;top:0;bottom:0;width:92px;border:0;background:var(--danger);color:white;font-size:var(--meta);display:flex;justify-content:center;align-items:center;gap:5px;visibility:hidden;pointer-events:none}
+.task-shell.swipe-open .swipe-delete{visibility:visible;pointer-events:auto}
 .swipe-delete svg{width:18px;height:18px}
 .task-body{position:relative;display:flex;align-items:center;gap:9px;min-height:64px;background:var(--bg);padding:7px 0;transform:translateX(0);transition:transform .15s ease}
 .task-shell.swipe-open .task-body{transform:translateX(-92px)}
@@ -73,17 +75,18 @@ button svg{pointer-events:none}
 .task-star{border:0;background:none;min-width:35px;height:44px;display:grid;place-items:center;padding:0;font-size:22px;color:var(--muted)}
 .task-star.active{color:var(--blue)}
 .task-star svg{width:21px;height:21px}
-.detail-star-button{display:inline-flex;align-items:center;min-height:40px;margin-top:11px;padding:6px 10px;border:1px solid var(--fine);border-radius:9px;background:var(--surface);color:var(--muted);font-size:var(--meta);font-weight:500}
+.detail-star-button{display:inline-flex;align-items:center;min-height:36px;margin-top:8px;padding:6px 10px;border:1px solid var(--fine);border-radius:9px;background:var(--surface);color:var(--muted);font-size:var(--meta);font-weight:500}
 .detail-star-button[aria-pressed="true"]{color:var(--blue);border-color:var(--blue)}
 .detail-star-button svg{width:18px;height:18px;margin-right:7px}
 .task-menu{border:0;background:none;min-width:26px;height:44px;display:grid;place-items:center;color:var(--muted);padding:0}
 .task-menu svg{width:18px;height:18px}
 .drag-grip{border:0;background:none;min-width:32px;height:44px;display:grid;place-items:center;color:var(--muted);opacity:.65;padding:0;touch-action:none;cursor:grab}
 .drag-grip svg{width:18px;height:18px}
-.task-details{padding:2px 4px 18px 49px}
-.task-details textarea{width:100%;display:block;min-height:82px;resize:vertical;line-height:1.5;border:1px solid var(--fine);border-radius:12px;background:var(--surface);padding:13px 14px;font-size:calc(var(--size)*.87);outline:none}
+.task-details{position:relative;z-index:1;padding:0 4px 14px 49px;background:var(--bg)}
+.task-details textarea{width:100%;display:block;min-height:68px;resize:vertical;line-height:1.45;border:1px solid var(--fine);border-radius:10px;background:var(--surface);padding:10px 12px;font-size:calc(var(--size)*.87);outline:none}
 .task-details textarea:focus{border-color:var(--blue)}
-.note-links{padding:10px 2px 0;font-size:calc(var(--size)*.82);display:flex;flex-direction:column;gap:5px}
+.note-links{padding:8px 2px 0;font-size:calc(var(--size)*.82);display:flex;flex-direction:column;gap:5px}
+.note-links:empty{display:none}
 .note-links a{display:inline-flex;align-items:flex-start;gap:7px}
 .note-links svg{width:15px;height:15px;margin-top:3px}
 .task-details small{display:block;margin-top:7px;color:var(--muted);font-size:var(--meta)}
