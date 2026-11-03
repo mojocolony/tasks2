@@ -1,12 +1,18 @@
-# Tasks — Now & Later (v0.1.3 preview)
+# Tasks — Now & Later (v0.1.4 preview)
 
 A separate, mobile-first proof of the new Tasks app. **It is not a modification of the existing `mojocolony/tasks` project.** It has no connection to the old app or its Dropbox file, and it never reads or migrates old app data.
+
+## v0.1.4 adjustment
+
+- Kept Lucide Sparkles but returned the clear-completed action to a deliberate **downward pull near the top of the task page**. The app now claims this touch gesture earlier and sets CSS overscroll containment to suppress browser pull-to-refresh where supported. The clear threshold is 120px; the Undo and Recently Cleared controls remain.
+- Pull to clear is available only when completed tasks exist on the current page and the gesture begins in a blank part of the upper page (not on a task, input, or button).
+- The native browser gesture can vary by Safari/iOS version; test on the actual device. Settings still offers the clear-completed fallback.
 
 ## v0.1.3 changes
 
 - Replaced all ⚡ controls with the exact Lucide Sparkles SVG. Existing starred data stays unchanged.
 - A Sparkles-only filter may display empty lists until a task is marked important; the empty state now explains this and the filter banner offers Show all.
-- Replaced the downward clear gesture with a deliberate **upward pull from blank space at the bottom of the page** (120px threshold). The browser can use its normal downward refresh gesture. Undo and Recently Cleared are preserved.
+- The subsequent v0.1.4 change restores **pull down** from blank space at the top to clear completed tasks. Undo and Recently Cleared are preserved.
 
 ## v0.1.2 correction
 
@@ -20,7 +26,7 @@ New tasks are unstarred regardless of filter state. The ⚡ symbol appears on a 
 - Tap checkbox to complete/uncomplete; completed tasks remain crossed out and dimmed.
 - Tap task title to expand a note editor. Text is saved automatically. HTTP/HTTPS URLs are shown as clickable links underneath.
 - Swipe a task left to reveal Delete. Deleted tasks have an Undo action.
-- Pull up deliberately from blank space at the bottom of the page to clear completed tasks on that page (120px gesture threshold); Undo and a Recently Cleared restore action are provided.
+- Pull down deliberately from blank space at the top of the page to clear completed tasks on that page (120px gesture threshold); Undo and a Recently Cleared restore action are provided.
 - Drag tasks within or between lists, including collapsed/empty lists; drag to the screen edge to flip pages. There is a dedicated drag handle as a fallback.
 - Floating pill: outlined in blue with a white (or dark-theme) interior and blue icons; add above, Sparkles-only filter below.
 - IBM Plex Mono; font scale options; selected light palette; provisional dark mode.
