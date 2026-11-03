@@ -2,6 +2,7 @@
   color-scheme:light;
   --bg:#ffffff; --surface:#f5f6f7; --muted:#8d8f92; --blue:#1badf8;
   --ink:#242a30; --fine:#dadde0; --softblue:#e9f7ff; --danger:#b34548;
+  --delete-bg:#FCA886; --delete-ink:#242a30;
   --size:18px; --meta:13px; --pill-ink:#143142;
   font-family:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
 }
@@ -59,7 +60,7 @@ button svg{pointer-events:none}
 .task-shell{position:relative;border-bottom:1px solid var(--fine);overflow:hidden;touch-action:pan-y}
 .task-shell.drag-source{opacity:.24}
 .task-row{position:relative;overflow:hidden;background:var(--bg)}
-.swipe-delete{position:absolute;right:0;top:0;bottom:0;width:92px;border:0;background:var(--danger);color:white;font-size:var(--meta);display:flex;justify-content:center;align-items:center;gap:5px;visibility:hidden;pointer-events:none}
+.swipe-delete{position:absolute;right:0;top:0;bottom:0;width:92px;border:0;background:var(--delete-bg);color:var(--delete-ink);font-size:var(--meta);display:flex;justify-content:center;align-items:center;gap:5px;visibility:hidden;pointer-events:none}
 .task-shell.swipe-open .swipe-delete{visibility:visible;pointer-events:auto}
 .swipe-delete svg{width:18px;height:18px}
 .task-body{position:relative;display:flex;align-items:center;gap:9px;min-height:64px;background:var(--bg);padding:7px 0;transform:translateX(0);transition:transform .15s ease}
