@@ -1,8 +1,8 @@
 import {
-  NOW, LATER, VERSION, APP_ID, makeId, emptyState, normalizeState, activeTasks,
+  NOW, LATER, SOMEDAY, VERSION, APP_ID, makeId, emptyState, normalizeState, activeTasks,
   addTask, toggleCompleted, clearCompleted, restoreCleared, removeTask, restoreTask,
   moveTask, addList, deleteListToLater
-} from './core.mjs?v=018';
+} from './core.mjs?v=019';
 
 const DB_NAME = 'tasks-now-later-v1';
 const DB_STORE = 'documents';
@@ -207,6 +207,7 @@ function render(){
     <main class="page ${ui.page==='main'?'active':''}" data-page="main">
       ${sectionHtml(state.lists.find(l=>l.id===NOW))}
       ${sectionHtml(state.lists.find(l=>l.id===LATER))}
+      ${sectionHtml(state.lists.find(l=>l.id===SOMEDAY))}
     </main>
     <main class="page ${ui.page==='lists'?'active':''}" data-page="lists">
       ${state.lists.filter(l=>!l.permanent).sort((a,b)=>a.order-b.order).map(sectionHtml).join('')}
