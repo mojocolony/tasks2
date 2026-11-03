@@ -216,7 +216,7 @@ function render(){
     <span class="pill-divider"></span>
     <button type="button" class="${state.prefs.starredOnly?'is-active':''}" data-action="filter" aria-label="${state.prefs.starredOnly?'Show all tasks':'Show Sparkles tasks'}" aria-pressed="${state.prefs.starredOnly}">${icon('sparkles')}</button>
   </div>
-  <div id="pullHint" class="pull-hint" aria-live="polite">Pull up further to clear completed</div>
+  <div id="pullHint" class="pull-hint" aria-live="polite">Pull down further to clear completed</div>
   ${menuHtml()}${formHtml()}
   ${ui.toast?`<div class="toast" role="status"><span>${esc(ui.toast.msg)}</span>${ui.toast.undo?`<button type="button" data-action="undo">Undo</button>`:''}</div>`:''}
   <input type="file" id="backupImport" accept=".json,application/json" hidden>
@@ -355,27 +355,28 @@ async function onImport(event){
 }
 
 // Mobile gestures: horizontal swipe on a row reveals Delete; horizontal swipe on the page switches pages.
-// Clear completed tasks with a deliberate UPWARD overscroll from empty space near the BOTTOM of the page.
-// Start away from the iOS home-indicator edge, and require a full 120px pull plus Undo.
-// Ordinary vertical scrolling and pull-to-refresh are not intercepted.
+// A deliberate downward pull from empty space near the top clears completed tasks on the current page.
+// Prevent default early on the intended gesture to avoid invoking browser pull-to-refresh.
 let touch=null;
 function onTouchStart(event){
   if(event.touches.length!==1||ui.sheet||ui.menu||ui.dragging)return;
   const e=event.touches[0],target=event.target;
   if(target.closest('input,textarea,select,a,.pill,.task-details'))return;
   const row=target.closest('.task-shell');
-  const scrollHeight=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
-  const atBottom=window.scrollY+innerHeight>=scrollHeight-8;
-  const bottomStart=e.clientY>innerHeight-Math.min(230,innerHeight*.36)&&e.clientY<innerHeight-22;
-  const pullEligible=atBottom&&bottomStart&&!target.closest('button,.task-shell,.pill,.menu,.sheet,.icon-button')&&countPageDone()>0;
+  const atTop=window.scrollY<5;
+  const topStart=e.clientY<Math.min(460,Math.max(300,innerHeight*.55))&&e.clientY>18;
+  const pullEligible=atTop&&topStart&&!target.closest('button,.task-shell,.pill,.menu,.sheet,.icon-button')&&countPageDone()>0;
   touch={startX:e.clientX,startY:e.clientY,row:row?.dataset.taskId??null,pullEligible,gesture:null,dx:0,dy:0};
 }
 function onTouchMove(event){
   if(!touch||event.touches.length!==1||ui.dragging)return;
   const e=event.touches[0];touch.dx=e.clientX-touch.startX;touch.dy=e.clientY-touch.startY;
+  // Claim only a clear downward pull. Do this before Safari turns it into refresh.
+  if(!touch.gesture&&touch.pullEligible&&touch.dy>7&&touch.dy>Math.abs(touch.dx)*1.25){
+    touch.gesture='pull';
+  }
   if(!touch.gesture&&Math.hypot(touch.dx,touch.dy)>14){
     if(Math.abs(touch.dx)>Math.abs(touch.dy)*1.3)touch.gesture='horizontal';
-    else if(touch.pullEligible&&touch.dy< -15&&-touch.dy>Math.abs(touch.dx)*1.5)touch.gesture='pull';
     else touch.gesture='scroll';
   }
   if(touch.gesture==='horizontal'){
@@ -389,10 +390,10 @@ function onTouchMove(event){
     if(event.cancelable)event.preventDefault();
     const hint=root.querySelector('#pullHint');
     if(hint){
-      const ready=touch.dy<=-120;
+      const ready=touch.dy>=120;
       hint.classList.add('show');
       hint.classList.toggle('ready',ready);
-      hint.textContent=ready?`Release to clear ${countPageDone()} completed`:'Pull up further to clear completed';
+      hint.textContent=ready?`Release to clear ${countPageDone()} completed`:'Pull down further to clear completed';
     }
   }
 }
@@ -400,7 +401,7 @@ function onTouchEnd(){
   if(!touch)return;const g=touch;touch=null;
   root.querySelector('#pullHint')?.classList.remove('show','ready');
   if(ui.dragging)return;
-  if(g.gesture==='pull'&&g.dy<=-120){
+  if(g.gesture==='pull'&&g.dy>=120){
     root.dataset.suppressClick='1';setTimeout(()=>{delete root.dataset.suppressClick;},350);
     if(countPageDone())clearCurrent();else showToast('No completed tasks to clear');
   }else if(g.gesture==='horizontal'){
